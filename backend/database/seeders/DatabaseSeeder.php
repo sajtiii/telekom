@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,14 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => Hash::make('password'),
         ]);
 
         $books = json_decode(File::get(storage_path('app/books.json')), true);
         DB::table('books')->insert($books);
+        DB::update('ALTER SEQUENCE books_id_seq RESTART WITH ' . (count($books) + 1));
     }
 }

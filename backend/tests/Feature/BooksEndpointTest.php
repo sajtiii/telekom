@@ -6,17 +6,27 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Book;
+use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 
 class BooksEndpointTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    public function setup(): void
+    {
+        parent::setUp();
+
+        $this->seed(DatabaseSeeder::class);
+
+        $this->user = User::first();
+    }
+
     /** @test */ 
     public function books_index_endpoint(): void
     {
-        $this->seed(DatabaseSeeder::class);
-
         $response = $this->get('/api/books');
 
         $response->assertStatus(200);
@@ -39,12 +49,9 @@ class BooksEndpointTest extends TestCase
     }
 
 
-    /** @test */
     /** @test */ 
     public function books_show_endpoint(): void
     {
-        $this->seed(DatabaseSeeder::class);
-
         $response = $this->get('/api/books/1');
 
         $response->assertStatus(200);
@@ -62,6 +69,109 @@ class BooksEndpointTest extends TestCase
         ]);
         $response->assertJsonFragment([
             'id' => 1,
+        ]);
+    }
+
+
+    /** @test */
+    public function books_create_endpoint(): void
+    {
+        $response = $this->post('/api/books', [
+            'author' => 'John Doe',
+            'title' => 'T',
+            'publish_date' => '2024-03-18',
+            'isbn' => '1234567890456123',
+            'summary' => 'A book about something',
+            'price' => -5,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'title',
+            'price',
+            'isbn',
+            'on_store',
+        ]);
+
+        $response = $this->post('/api/books', [
+            'author' => 'John Doe',
+            'title' => 'The Book',
+            'publish_date' => '2024-03-18',
+            'isbn' => '1234567890123',
+            'summary' => 'A book about something',
+            'price' => 100,
+            'on_store' => 10,
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJsonStructure([
+            'links' => [
+                'self',
+            ],
+        ]);
+    }
+
+    /** @test */
+    public function books_update_endpoint(): void
+    {
+        $response = $this->put('/api/books/1', [
+            'author' => 'John Doe',
+            'title' => 'T',
+            'publish_date' => '2024-03-18',
+            'isbn' => '1234567890456123',
+            'summary' => 'A book about something',
+            'price' => -5,
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors([
+            'title',
+            'price',
+            'isbn',
+            'on_store',
+        ]);
+
+        $response = $this->put('/api/books/1', [
+            'author' => 'John Doe',
+            'title' => 'The Book',
+            'publish_date' => '2024-03-18',
+            'isbn' => '1234567890123',
+            'summary' => 'A book about something',
+            'price' => 100,
+            'on_store' => 10,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'links' => [
+                'self',
+            ],
+        ]);
+        $this->assertDatabaseHas(Book::class, [
+            'author' => 'John Doe',
+            'title' => 'The Book',
+            'publish_date' => '2024-03-18',
+            'isbn' => '1234567890123',
+            'summary' => 'A book about something',
+            'price' => 100,
+            'on_store' => 10,
+        ]);
+    }
+
+    /** @test */
+    public function books_delete_endpoint(): void
+    {
+        $response = $this->delete('/api/books/1');
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'links' => [
+                'list',
+            ]
+            ]);
+
+        $this->assertDatabaseMissing(Book::class, [
+            'id' => '1',
         ]);
     }
 }
