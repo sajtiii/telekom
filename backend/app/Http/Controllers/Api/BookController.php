@@ -17,7 +17,7 @@ class BookController extends Controller
             $query->where('title', 'like', '%' . $request->input('q') . '%');
         }
         
-        return BookResource::collection($query->get());
+        return BookResource::collection($query->orderBy('title', 'desc')->get());
     }
 
     public function show(Book $book)
