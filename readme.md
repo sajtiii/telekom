@@ -3,7 +3,7 @@ This is my small application for my telekom application.
 
 ## 1. part (Questions):
 #### Angular
-I am trying my best to answer these questions, but currently I do not have any relations to AngularJS, in my procejts I mainly use VueJS, so I am trying to answer the following questions with analogies between those two.
+I am trying my best to answer these questions, but currently I do not have any relation to AngularJS, in my projects I mainly use VueJS, so I am trying to answer the following questions with analogies between those two.
 
 ###### 1. What is the main idea behind signals? 
  
