@@ -70,6 +70,7 @@ import axios from 'axios'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Trash2, Ellipsis, Pencil } from 'lucide-vue-next'
+import { toast } from '@/components/ui/toast'
 const books = ref()
 const loading = ref(true)
 
@@ -87,10 +88,13 @@ onMounted(() => {
     })
 });
 
-function deleteBook(id: number) {
+const deleteBook = (id: number) {
   axios.delete(`http://localhost:8000/api/books/${id}`)
     .then(response => {
       books.value = books.value.filter((book: any) => book.id !== id)
+      toast({
+
+      })
     })
     .catch(error => {
       console.log(error)

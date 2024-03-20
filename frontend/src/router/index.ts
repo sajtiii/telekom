@@ -11,17 +11,20 @@ const router = createRouter({
     {
       path: '/create',
       name: 'books.create',
-      component: () => import('../views/Books/Create.vue')
+      component: () => import('../views/Books/Form.vue'),
+      props: { isCreate: true, isShow: false, id: null }
     },
     {
       path: '/:id',
       name: 'books.show',
-      component: () => import('../views/Books/Show.vue')
+      component: () => import('../views/Books/Form.vue'),
+      props: { isCreate: false, isShow: true, id: (route) => route.params.id }
     },
     {
       path: '/:id/edit',
       name: 'books.edit',
-      component: () => import('../views/Books/Edit.vue')
+      component: () => import('../views/Books/Form.vue'),
+      props: { isCreate: false, isShow: false, id: (route) => route.params.id }
     }
   ]
 })
