@@ -89,7 +89,6 @@ import { Button } from '@/components/ui/button';
 import { Trash2, Ellipsis, Pencil, Plus, Search } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast'
 import vueDebounce from 'vue-debounce'
-import process from 'process';
 
 
 const { toast } = useToast();
