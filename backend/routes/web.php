@@ -14,5 +14,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return "Noting to see here. Go to /api/books";
+    return 'Noting to see here. Go to /api/books';
 });

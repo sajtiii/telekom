@@ -14,7 +14,7 @@ class BookResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $isIndex = $request->route()->uri == "api/books";
+        $isIndex = $request->route()->uri == 'api/books';
 
         return [
             'id' => $this->id,
@@ -26,7 +26,7 @@ class BookResource extends JsonResource
             'summary' => $this->whenNotNull($this->summary),
             'price' => $this->whenNotNull($this->price),
             'links' => $this->when($isIndex, [
-                'self' => route('books.show', ['book' => $this->id])
+                'self' => route('books.show', ['book' => $this->id]),
             ]),
         ];
     }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Book;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -25,6 +24,6 @@ class DatabaseSeeder extends Seeder
 
         $books = json_decode(File::get(storage_path('app/books.json')), true);
         DB::table('books')->insert($books);
-        DB::update('ALTER SEQUENCE books_id_seq RESTART WITH ' . (count($books) + 1));
+        DB::update('ALTER SEQUENCE books_id_seq RESTART WITH '.(count($books) + 1));
     }
 }

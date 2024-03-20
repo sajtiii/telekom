@@ -2,12 +2,11 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\Book;
 use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class BooksEndpointTest extends TestCase
 {
@@ -24,7 +23,7 @@ class BooksEndpointTest extends TestCase
         $this->user = User::first();
     }
 
-    /** @test */ 
+    /** @test */
     public function books_index_endpoint(): void
     {
         $response = $this->get('/api/books');
@@ -41,15 +40,14 @@ class BooksEndpointTest extends TestCase
                     'publish_date',
                     'on_store',
                     'links' => [
-                        'self'
+                        'self',
                     ],
                 ],
             ],
         ]);
     }
 
-
-    /** @test */ 
+    /** @test */
     public function books_show_endpoint(): void
     {
         $response = $this->get('/api/books/1');
@@ -71,7 +69,6 @@ class BooksEndpointTest extends TestCase
             'id' => 1,
         ]);
     }
-
 
     /** @test */
     public function books_create_endpoint(): void

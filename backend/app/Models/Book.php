@@ -20,5 +20,4 @@ class Book extends Model
         'price',
         'on_store',
     ];
-
 }
