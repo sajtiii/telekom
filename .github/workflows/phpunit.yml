@@ -21,11 +21,6 @@ jobs:
     - name: Directory Permissions
       run: chmod -R 777 storage bootstrap/cache
       working-directory: ./backend
-    - name: Create Database
-      run: |
-        mkdir -p database
-        touch database/database.sqlite
-      working-directory: ./backend
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: php artisan test
       working-directory: ./backend
