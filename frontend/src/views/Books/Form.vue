@@ -1,5 +1,5 @@
 <template>
-    <form class="w-2/3 space-y-6" @submit.prevent="handleSubmit">
+    <form class="space-y-6" @submit.prevent="handleSubmit">
       <div class="grid md:grid-cols-2 gap-4">
         <div>
           <FormField name="title">
@@ -8,7 +8,11 @@
               <FormControl>
                 <Input type="text" placeholder="Title of the book" v-model="book.title" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.title !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.title">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -19,7 +23,11 @@
               <FormControl>
                 <Input type="text" placeholder="Author of the book" v-model="book.author" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.author !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.author">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -32,7 +40,11 @@
               <FormControl>
                 <Input type="text" placeholder="ISBN identifier" v-model="book.isbn" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.isbn !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.isbn">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -43,7 +55,11 @@
               <FormControl>
                 <Input type="date" placeholder="Publish date of the book" v-model="book.publish_date" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.publish_date !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.publish_date">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -54,7 +70,11 @@
               <FormControl>
                 <Input type="number" placeholder="On store quantity" v-model="book.on_store" min="0" step="1" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.on_store !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.on_store">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -65,7 +85,11 @@
               <FormControl>
                 <Input type="number" placeholder="Price of the book" v-model="book.price" min="0" step="1" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.price !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.price">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -78,7 +102,11 @@
               <FormControl>
                 <Textarea placeholder="Summary from the book" v-model="book.summary" :disabled="isShow" />
               </FormControl>
-              <FormMessage />
+              <FormDescription v-if="validationErrors.summary !== 'undefined'" class="text-red-500 text-sm italic">
+                <ul>
+                  <li v-for="error in validationErrors.summary">{{ error }}</li>
+                </ul>
+              </FormDescription>
             </FormItem>
           </FormField>
         </div>
@@ -194,6 +222,7 @@ const handleSubmit = ((values: any) => {
   }  
 
   loading.value = true;
+  validationErrors.value = {};
   axios({
       method: props.isCreate ? 'post' : 'put',
       url: 'http://localhost:8000/api/books/' + (props.isCreate ? '' : route.params.id),

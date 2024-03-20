@@ -1,18 +1,23 @@
 <template>
   <div>
-      <div>
+      <div class="flex items-center justify-between mb-3">
+        <div class="relative w-full max-w-sm items-center">
+          <Input id="search" type="text" class="pl-10" placeholder="Type here your search term" v-model="searchTerm" v-debounce:300ms="fetchBooks" />
+          <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
+            <Search class="size-6 text-muted-foreground" />
+          </span>
+        </div>
         <RouterLink :to="{ name: 'books.create' }">
-            <Button type="link" variant="outline">
-              <Plus class="w-4 h-4 mr-2" /> Create New
-            </Button>
-          </RouterLink>
+          <Button type="button">
+            <Plus class="w-4 h-4 mr-2" /> Create
+          </Button>
+        </RouterLink>
       </div>
       <div v-if="loading">
-        <h1 class="text-xl font-bold center">Loading books...</h1>
+        <h1 class="text-xl font-bold text-center">Loading books...</h1>
       </div>
       <div v-else>
         <Table>
-          <TableCaption>Books</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead class="text-center">ID</TableHead>
@@ -24,6 +29,9 @@
             </TableRow>
           </TableHeader>
           <TableBody>
+            <TableRow v-if="books.length === 0">
+              <TableCell class="text-center" :colspan="6">No books found!</TableCell>
+            </TableRow>
             <TableRow v-for="book in books" :key="book.id">
               <TableCell class="text-center">{{ book.id }}</TableCell>
               <TableCell>{{ book.title }}</TableCell>
@@ -75,16 +83,26 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Trash2, Ellipsis, Pencil, Plus } from 'lucide-vue-next'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Trash2, Ellipsis, Pencil, Plus, Search } from 'lucide-vue-next'
 import { useToast } from '@/components/ui/toast'
+import vueDebounce from 'vue-debounce'
+
 
 const { toast } = useToast();
 const books = ref()
-const loading = ref(true)
+const loading = ref(true as Boolean)
+const searchTerm = ref('')
+const vDebounce = vueDebounce({ lock: true })
 
 onMounted(() => {
-  axios.get('http://localhost:8000/api/books')
+  fetchBooks();
+});
+
+const fetchBooks = (() => {
+  axios.get('http://localhost:8000/api/books?q=' + searchTerm.value)
     .then(response => {
       books.value = response.data.data
     })
@@ -98,7 +116,7 @@ onMounted(() => {
     .finally(() => {
       loading.value = false
     })
-});
+})
 
 const deleteBook = ((id: number) => {
   axios.delete(`http://localhost:8000/api/books/${id}`)
