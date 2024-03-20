@@ -88,3 +88,4 @@ Some basic github actions were also added to the software stack.
 
 ##### Possible next steps:
 - Add token based or JWT authentication (Sanctum could be used)
+- Make the site look a bit fancier
