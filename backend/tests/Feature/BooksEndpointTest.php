@@ -105,8 +105,9 @@ class BooksEndpointTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJsonStructure([
-            'links' => [
-                'self',
+            'data' => [
+                'success',
+                'id',
             ],
         ]);
     }
@@ -143,8 +144,9 @@ class BooksEndpointTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'links' => [
-                'self',
+            'data' => [
+                'success',
+                'id',
             ],
         ]);
         $this->assertDatabaseHas(Book::class, [
@@ -165,10 +167,10 @@ class BooksEndpointTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            'links' => [
-                'list',
-            ]
-            ]);
+            'data' => [
+                'success',
+            ],
+        ]);
 
         $this->assertDatabaseMissing(Book::class, [
             'id' => '1',

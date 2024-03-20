@@ -18,13 +18,13 @@ const router = createRouter({
       path: '/:id',
       name: 'books.show',
       component: () => import('../views/Books/Form.vue'),
-      props: { isCreate: false, isShow: true, id: (route) => route.params.id }
+      props: { isCreate: false, isShow: true }
     },
     {
       path: '/:id/edit',
       name: 'books.edit',
       component: () => import('../views/Books/Form.vue'),
-      props: { isCreate: false, isShow: false, id: (route) => route.params.id }
+      props: { isCreate: false, isShow: false }
     }
   ]
 })

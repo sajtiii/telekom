@@ -29,8 +29,9 @@ class BookController extends Controller
     {
         $book = Book::create($request->validated());
         return response()->json([
-            'links' => [
-                'self' => route('books.show', ['book' => $book->id])
+            'data' => [
+                'success' => true,
+                'id' => $book->id,
             ],
         ], 201);
     }
@@ -39,8 +40,9 @@ class BookController extends Controller
     {
         $book->update($request->validated());
         return response()->json([
-            'links' => [
-                'self' => route('books.show', ['book' => $book->id])
+            'data' => [
+                'success' => true,
+                'id' => $book->id,
             ],
         ]);
     }
@@ -49,9 +51,9 @@ class BookController extends Controller
     {
         $book->delete();
         return response()->json([
-            'links' => [
-                'list' => route('books.index'),
-            ] 
+            'data' => [
+                'success' => true,
+            ],
         ]);
     }
 }

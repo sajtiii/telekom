@@ -1,5 +1,12 @@
 <template>
   <div>
+      <div>
+        <RouterLink :to="{ name: 'books.create' }">
+            <Button type="link" variant="outline">
+              <Plus class="w-4 h-4 mr-2" /> Create New
+            </Button>
+          </RouterLink>
+      </div>
       <div v-if="loading">
         <h1 class="text-xl font-bold center">Loading books...</h1>
       </div>
@@ -69,36 +76,46 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Trash2, Ellipsis, Pencil } from 'lucide-vue-next'
-import { toast } from '@/components/ui/toast'
+import { Trash2, Ellipsis, Pencil, Plus } from 'lucide-vue-next'
+import { useToast } from '@/components/ui/toast'
+
+const { toast } = useToast();
 const books = ref()
 const loading = ref(true)
 
 onMounted(() => {
-  console.log('loading');
   axios.get('http://localhost:8000/api/books')
     .then(response => {
       books.value = response.data.data
     })
     .catch(error => {
-      console.log(error)
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request. Please contact support.',
+          variant: 'destructive',
+        });
     })
     .finally(() => {
       loading.value = false
     })
 });
 
-const deleteBook = (id: number) {
+const deleteBook = ((id: number) => {
   axios.delete(`http://localhost:8000/api/books/${id}`)
     .then(response => {
       books.value = books.value.filter((book: any) => book.id !== id)
       toast({
-
+        title: 'Book deleted',
+        description: 'The book was deleted successfully.',
       })
     })
     .catch(error => {
-      console.log(error)
+        toast({
+          title: 'Uh oh! Something went wrong.',
+          description: 'There was a problem with your request. Please contact support.',
+          variant: 'destructive',
+        });
     })
-}
+})
 
 </script>
