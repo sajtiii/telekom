@@ -7,6 +7,22 @@ on:
 jobs:
   phpunit:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: db_test_laravel
+        ports:
+          - 55432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - uses: shivammathur/setup-php@v2
       with:
@@ -24,3 +40,9 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit
       run: php artisan test
       working-directory: ./backend
+      env:
+        DB_CONNECTION: pgsql
+        DB_DATABASE: db_test_laravel
+        DB_PORT: 55432
+        DB_USERNAME: postgres
+        DB_PASSWORD: postgres
