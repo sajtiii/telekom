@@ -20,13 +20,13 @@ export const toastVariants = cva(
       variant: {
         default: 'border bg-background text-foreground',
         destructive:
-                    'destructive group border-destructive bg-destructive text-destructive-foreground',
-      },
+          'destructive group border-destructive bg-destructive text-destructive-foreground'
+      }
     },
     defaultVariants: {
-      variant: 'default',
-    },
-  },
+      variant: 'default'
+    }
+  }
 )
 
 type ToastVariants = VariantProps<typeof toastVariants>
@@ -34,5 +34,5 @@ type ToastVariants = VariantProps<typeof toastVariants>
 export interface ToastProps extends ToastRootProps {
   class?: HTMLAttributes['class']
   variant?: ToastVariants['variant']
-  'onOpenChange'?: ((value: boolean) => void) | undefined
+  onOpenChange?: ((value: boolean) => void) | undefined
 }
