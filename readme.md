@@ -6,7 +6,11 @@ This is my small application for my telekom application.
 I am trying my best to answer these questions, but currently I do not have any relation to AngularJS, in my projects I mainly use VueJS, so I am trying to answer the following questions with analogies between those two.
 
 ###### 1. What is the main idea behind signals? 
- 
+In AngularJS, signals are commonly referred to as AngularJS events or event handlers. Signals are used to notify AngularJS components of certain actions or changes that have occurred. These actions can be user interactions, data updates or any other event within the application.
+
+Signals are usually implemented using directives like `ng-click` or custom handlers.
+
+In VueJS sgnals are referred to events and implement basically the same functionality. It forms the base of event driven programming in both stacks. `ng-click` is replaced with  `@click / v-click` in Vue.
 
 ###### 2. What are the pros and the cons of standalone components? 
 As in VueJS, it is possible to build up the application using one file only, but this comes with many drawbacks. Tearing apart the application into smaller, managable portions can solve the problem, but this approach also introduces some drawbacks.
@@ -14,21 +18,26 @@ As in VueJS, it is possible to build up the application using one file only, but
 Standalone components are easier to manage, reusable, and have their own scope of variables, functions, etc..., on the other hand, sharing data between components becomes harder.
 
 ###### 3. What is the difference between pure and impure pipes? 
-
-
+In Angular, pipes are used to transform data. These pipes are categorized into two different types: pure and impure pipes. Pure pipes are stateless (only rely on the input data), while impure pipes are depend upon a state, therefore pure pipes only change when a change in the data occurs, while impure pipes are called in every detection cycle.
 
 
 ###### 4. What is RxJS? 
 Reactive Extensions for JavaScript (RxJS) is a reactive (when the data changes change the DOM) library utilizing the observer design pattern (when something happens, react to it). 
 
 ###### 5. What are Value Accessors? Where can you use them? 
-A Value Accessor defines a bridge between the Angular forms API and the native DOM element.
+A Value Accessor defines a bridge between the Angular forms API and the native DOM form elements. They provide a way to read or write data to form controls.
 
-
+It is a bit similar to `v-model` in Vue, but it does not transform the data, just syncronizes it with the DOM.
 
 ###### 6. How can components communicate with each other? 
- 
+In both frameworks, components can communicate with each other using a parent-children scheme, where parents can pass data using properties, and child compoenents can emit events for which the parent is subscribed to.
+
+Also, communication is possible using events only, where compoenents can emit specific events, and other components can listen for it.
+
 ###### 7. What is AsyncPipe? How may you use it?
+Async pipe is a buit in pipe, which is used to handle asynchronous data streams. 
+
+It can be used through Observables and Promises, and can automatically unwrap data for the `template` section.
 
 #### Laravel
 ###### 8. What are Middlewares? For which purpose you may use them? 
