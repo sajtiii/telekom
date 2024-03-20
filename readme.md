@@ -84,8 +84,20 @@ The backend was written in Laravel 10.x, and the frontend was developed using Vu
 
 I also left some notes in the code (comments starting with `// NOTE:`). These mark points where I would have made different decisions in the development that would not have been bound by the assignment.
 
-Some basic github actions were also added to the software stack.
+Some basic github actions were also added to the software stack to test the backend code.
+
+To run it:
+1. Clone the repo
+2. Open a terminal
+3. cd into the backend directory, and start the backend `cd ./backend && sail up`
+4. Open another terminal
+5. cd into the frontend directory, and start the frontend `cd ./frontend && npm run dev`
+
+
+The backend should run at port `8000`, while the frontend at `5173`.
 
 ##### Possible next steps:
 - Add token based or JWT authentication (Sanctum could be used)
 - Make the site look a bit fancier
+- Pagination
+- More robust search
