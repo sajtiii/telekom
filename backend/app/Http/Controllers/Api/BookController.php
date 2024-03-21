@@ -12,12 +12,12 @@ class BookController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Book::query()->select(['id', 'author', 'title', 'isbn', 'publish_date', 'on_store']);
+        $query = Book::query()->select(['id', 'author', 'title', 'isbn', 'publish_date', 'on_store', 'summary']);
         if ($request->has('q')) {
             $query->where('title', 'like', '%'.$request->input('q').'%');
         }
 
-        return BookResource::collection($query->orderBy('title', 'desc')->get());
+        return BookResource::collection($query->orderBy('title', 'desc')->paginate(20));
     }
 
     public function show(Book $book)

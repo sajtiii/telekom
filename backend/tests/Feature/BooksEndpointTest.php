@@ -29,7 +29,7 @@ class BooksEndpointTest extends TestCase
         $response = $this->get('/api/books');
 
         $response->assertStatus(200);
-        $response->assertJsonCount(Book::count(), 'data');
+        $response->assertJsonCount(20, 'data');
         $response->assertJsonStructure([
             'data' => [
                 '*' => [

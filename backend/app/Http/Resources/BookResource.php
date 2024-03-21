@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 class BookResource extends JsonResource
 {
@@ -23,7 +24,7 @@ class BookResource extends JsonResource
             'isbn' => $this->isbn,
             'publish_date' => $this->publish_date,
             'on_store' => $this->on_store,
-            'summary' => $this->whenNotNull($this->summary),
+            'summary' => $isIndex ? Str::limit($this->summary, 30, '...') : $this->summary,
             'price' => $this->whenNotNull($this->price),
             'links' => $this->when($isIndex, [
                 'self' => route('books.show', ['book' => $this->id]),

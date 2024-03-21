@@ -24,6 +24,8 @@ class DatabaseSeeder extends Seeder
 
         $books = json_decode(File::get(storage_path('app/books.json')), true);
         DB::table('books')->insert($books);
-        DB::update('ALTER SEQUENCE books_id_seq RESTART WITH '.(count($books) + 1));
+        if (DB::getDriverName() === 'pgsql') {
+            DB::update('ALTER SEQUENCE books_id_seq RESTART WITH '.(count($books) + 1));
+        }
     }
 }

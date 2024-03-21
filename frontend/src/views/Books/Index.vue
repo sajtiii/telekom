@@ -8,7 +8,7 @@
           class="pl-10"
           placeholder="Type here your search term"
           v-model="searchTerm"
-          v-debounce:300ms="fetchBooks"
+          v-debounce:300ms="search()"
         />
         <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
           <Search class="size-6 text-muted-foreground" />
@@ -30,12 +30,13 @@
             <TableHead>Author</TableHead>
             <TableHead>ISBN</TableHead>
             <TableHead>On Store</TableHead>
+            <TableHead>Summary</TableHead>
             <TableHead class="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow v-if="books.length === 0">
-            <TableCell class="text-center" :colspan="6">No books found!</TableCell>
+            <TableCell class="text-center" :colspan="7">No books found!</TableCell>
           </TableRow>
           <TableRow v-for="book in books" :key="book.id">
             <TableCell class="text-center">{{ book.id }}</TableCell>
@@ -43,6 +44,7 @@
             <TableCell>{{ book.author }}</TableCell>
             <TableCell>{{ book.isbn }}</TableCell>
             <TableCell>{{ book.on_store }}</TableCell>
+            <TableCell>{{ book.summary }}</TableCell>
             <TableCell class="text-right">
               <div class="flex items-center justify-end">
                 <RouterLink :to="{ name: 'books.show', params: { id: book.id } }" class="mr-2"
@@ -81,6 +83,20 @@
           </TableRow>
         </TableBody>
       </Table>
+
+      <div class="mt-3">
+        <Pagination v-slot="{ page }" :total="meta.last_page" :sibling-count="1" show-edges :default-page="1">
+          <PaginationList class="flex items-center gap-1 justify-end">
+            <template v-for="(item, index) in meta.links">
+              <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.label" as-child>
+                <Button class="w-10 h-10 p-0" :variant="item.active ? 'default' : 'outline'">
+                  {{ item.label }}
+                </Button>
+              </PaginationListItem>
+            </template>
+          </PaginationList>
+        </Pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +119,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import {
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev,
+} from '@/components/ui/pagination'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Trash2, Ellipsis, Pencil, Plus, Search } from 'lucide-vue-next'
@@ -111,19 +137,27 @@ import vueDebounce from 'vue-debounce'
 
 const { toast } = useToast()
 const books = ref()
+const meta = ref()
 const loading = ref(true as Boolean)
 const searchTerm = ref('')
+const page = ref(1 as Number)
 const vDebounce = vueDebounce({ lock: true })
 
 onMounted(() => {
   fetchBooks()
 })
 
+const search = () => {
+  page.value = 1
+  fetchBooks()
+}
+
 const fetchBooks = () => {
   axios
-    .get('http://localhost:8000/api/books?q=' + searchTerm.value)
+    .get('http://localhost:8000/api/books?page=' + page.value + '&=' + searchTerm.value)
     .then((response) => {
       books.value = response.data.data
+      meta.value = response.data.meta
     })
     .catch((error) => {
       toast({
