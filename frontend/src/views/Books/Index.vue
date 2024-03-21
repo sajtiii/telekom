@@ -8,7 +8,7 @@
           class="pl-10"
           placeholder="Type here your search term"
           v-model="searchTerm"
-          v-debounce:300ms="search()"
+          v-debounce:300ms="search"
         />
         <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
           <Search class="size-6 text-muted-foreground" />
@@ -85,15 +85,21 @@
       </Table>
 
       <div class="mt-3">
-        <Pagination v-slot="{ page }" :total="meta.last_page" :sibling-count="1" show-edges :default-page="1">
-          <PaginationList class="flex items-center gap-1 justify-end">
-            <template v-for="(item, index) in meta.links">
-              <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.label" as-child>
-                <Button class="w-10 h-10 p-0" :variant="item.active ? 'default' : 'outline'">
-                  {{ item.label }}
+        <Pagination :total="meta.last_page" :sibling-count="1" show-edges :default-page="1">
+          <PaginationList v-slot="{ items }" class="flex items-center justify-end gap-1">
+            <PaginationFirst @click="paginate(1)" :disabled="meta.current_page === 1" />
+            <PaginationPrev @click="paginate(meta.current_page - 1)" :disabled="meta.current_page === 1" />
+
+            <template v-for="n in meta.last_page" :key="n">
+              <PaginationListItem :value="n" as-child>
+                <Button class="w-10 h-10 p-0" :variant="n === meta.current_page ? 'default' : 'outline'" @click="paginate(n)">
+                  {{ n }}
                 </Button>
               </PaginationListItem>
             </template>
+
+            <PaginationNext @click="paginate(meta.current_page + 1)" :disabled="meta.current_page === meta.last_page" />
+            <PaginationLast @click="paginate(meta.last_page)" :disabled="meta.current_page === meta.last_page" />
           </PaginationList>
         </Pagination>
       </div>
@@ -152,12 +158,22 @@ const search = () => {
   fetchBooks()
 }
 
+const paginate = (goTo: Number) => {
+  if (goTo < 1 || goTo > meta.value.last_page || goTo === meta.value.current_page) {
+    return;
+  }
+  page.value = goTo
+  fetchBooks()
+}
+
 const fetchBooks = () => {
+  loading.value = true;
   axios
     .get('http://localhost:8000/api/books?page=' + page.value + '&=' + searchTerm.value)
     .then((response) => {
       books.value = response.data.data
       meta.value = response.data.meta
+      page.value = meta.value.current_page
     })
     .catch((error) => {
       toast({
