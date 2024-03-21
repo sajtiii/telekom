@@ -88,18 +88,31 @@
         <Pagination :total="meta.last_page" :sibling-count="1" show-edges :default-page="1">
           <PaginationList v-slot="{ items }" class="flex items-center justify-end gap-1">
             <PaginationFirst @click="paginate(1)" :disabled="meta.current_page === 1" />
-            <PaginationPrev @click="paginate(meta.current_page - 1)" :disabled="meta.current_page === 1" />
+            <PaginationPrev
+              @click="paginate(meta.current_page - 1)"
+              :disabled="meta.current_page === 1"
+            />
 
             <template v-for="n in meta.last_page" :key="n">
               <PaginationListItem :value="n" as-child>
-                <Button class="w-10 h-10 p-0" :variant="n === meta.current_page ? 'default' : 'outline'" @click="paginate(n)">
+                <Button
+                  class="w-10 h-10 p-0"
+                  :variant="n === meta.current_page ? 'default' : 'outline'"
+                  @click="paginate(n)"
+                >
                   {{ n }}
                 </Button>
               </PaginationListItem>
             </template>
 
-            <PaginationNext @click="paginate(meta.current_page + 1)" :disabled="meta.current_page === meta.last_page" />
-            <PaginationLast @click="paginate(meta.last_page)" :disabled="meta.current_page === meta.last_page" />
+            <PaginationNext
+              @click="paginate(meta.current_page + 1)"
+              :disabled="meta.current_page === meta.last_page"
+            />
+            <PaginationLast
+              @click="paginate(meta.last_page)"
+              :disabled="meta.current_page === meta.last_page"
+            />
           </PaginationList>
         </Pagination>
       </div>
@@ -133,7 +146,7 @@ import {
   PaginationList,
   PaginationListItem,
   PaginationNext,
-  PaginationPrev,
+  PaginationPrev
 } from '@/components/ui/pagination'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -160,14 +173,14 @@ const search = () => {
 
 const paginate = (goTo: Number) => {
   if (goTo < 1 || goTo > meta.value.last_page || goTo === meta.value.current_page) {
-    return;
+    return
   }
   page.value = goTo
   fetchBooks()
 }
 
 const fetchBooks = () => {
-  loading.value = true;
+  loading.value = true
   axios
     .get('http://localhost:8000/api/books?page=' + page.value + '&=' + searchTerm.value)
     .then((response) => {
